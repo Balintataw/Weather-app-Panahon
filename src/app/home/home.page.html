@@ -1,7 +1,7 @@
 <ion-header no-border>
     <ion-toolbar class="wa-navbar">
         <!-- <div *ngIf="!searching"> -->
-            <ion-title class="wa-header__title" text-center>Panahon</ion-title>
+            <!-- <ion-title class="wa-header__title" text-center>Panahon</ion-title> -->
             <!-- <ion-buttons slot="secondary">
                 <ion-button (click)="toggleSearch()">
                     <ion-icon class="icon" slot="icon-only" name="search"></ion-icon>
@@ -18,7 +18,7 @@
                         </ion-button>
                     </ion-buttons>
                 </ion-label> -->
-                <!-- <ion-input class="wa-input"
+                <ion-input class="wa-input"
                             placeholder="Enter Zip Code"
                             type="number"
                             [(ngModel)]="zipCode">
@@ -27,7 +27,7 @@
                     <ion-button class="wa-nav__button--zip" (click)="getWeather(zipCode)">
                         <ion-icon class="icon" slot="icon-only" name="search"></ion-icon>
                     </ion-button>
-                </ion-buttons> -->
+                </ion-buttons>
             <!-- </ion-item>
         </div> -->
     </ion-toolbar>
@@ -45,13 +45,16 @@
             <div class="wa-temp__current">
                 {{ currentWeather }}&deg;
             </div>
+            <div class="wa-icon__current">
+                <ion-img [src]="currentIcon"></ion-img>
+            </div>  
         </div>
         <ion-row class="wa-temp__container-footer">
             <ion-col col-4>
-                Conditions:
+                Humidity: {{ humidity }}%
             </ion-col>
             <ion-col col-4>
-                Precip: {{ precip }}%
+                Precip: {{ precip }}in
             </ion-col>
             <ion-col col-4>
                 Wind: {{ wind }}mph
@@ -65,12 +68,12 @@
                 <ion-thumbnail slot="start">
                     <ion-img [src]="day.day.condition.icon"></ion-img>
                 </ion-thumbnail>
-                <ion-row>
-                    <ion-col col-9>
-                        <h4> Low: {{ day.day.mintemp_f }}&deg; | High: {{ day.day.maxtemp_f }}&deg; </h4>
-                        <p>{{ day.date | date:'EEE d' }}</p>
-                    </ion-col>
-                </ion-row>
+                <!-- <ion-row center> -->
+                            <ion-col size="12" justify-center>
+                                <p>{{ day.date | date:'EEE d' }}</p>
+                                <h4> Low: {{ day.day.mintemp_f }}&deg; | High: {{ day.day.maxtemp_f }}&deg; </h4>
+                            </ion-col>
+                <!-- </ion-row> -->
             </ion-item>
         </ion-list>
     </div>

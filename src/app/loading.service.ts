@@ -13,15 +13,18 @@ export class LoadingService {
     async present() {
         this.isLoading = true;
         return await this.loadingController.create({
-            duration: 5000,
-            }).then(a => {
-                a.present().then(() => {
-                    console.log('presented');
-                    if (!this.isLoading) {
+            // duration: 5000,
+            cssClass: "app-loading",
+            spinner: "bubbles",
+            showBackdrop: false,
+        }).then(a => {
+            a.present().then(() => {
+                console.log('presented');
+                if (!this.isLoading) {
                     a.dismiss().then(() => console.log('abort presenting'));
-                    }
-                });
+                }
             });
+        });
     }
 
     async dismiss() {

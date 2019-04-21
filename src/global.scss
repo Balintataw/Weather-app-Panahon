@@ -9,3 +9,17 @@
 @import '~@ionic/angular/css/text-alignment.css';
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
+
+.app-loading {
+    .loading-wrapper{
+        background-color:transparent;
+        box-shadow: none;
+        -webkit-box-shadow: none;
+        --height: 100px;
+        --width: 100px;
+        padding: 0 !important;
+
+        .loading-spinner {
+        }
+    }
+}

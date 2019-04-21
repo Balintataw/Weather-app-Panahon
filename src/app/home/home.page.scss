@@ -59,26 +59,33 @@ ion-header, ion-content {
     height: 200px;
     width: 200px;
     margin: 0 auto;
-    margin-top: 20px;
+    // margin-top: 20px;
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-direction: column;
     position: relative;
     overflow: hidden;
+  }
+
+  &-temp__high-low {
+    text-align: center;
+    position: relative;
+    // top: -20px;
+    padding-top: 15px;
+    color: #57524F;
+    font-size: 18px;
   }
 
   &-temp__current {
     font-size: 35px;
     color: #f99110;
     align-self: center;
+    padding-top: 15px;
   }
 
-  &-temp__high-low {
-    text-align: center;
-    position: relative;
-    top: -20px;
-    color: #57524F;
-    font-size: 18px;
+  &-icon__current {
+    align-self: center;
   }
 
   &-temp__container-footer {

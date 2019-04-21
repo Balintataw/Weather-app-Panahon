@@ -20,12 +20,14 @@ export interface Address {
 })
 export class HomePage implements OnInit {
     currentWeather: Number;
+    currentIcon: String;
     zipCode: String;
     searching: Boolean = false;
     location: String;
     minTemp: Number;
     maxTemp: Number;
     precip: Number;
+    humidity: Number;
     wind: Number;
     weatherResults: any;
     forcast: any[];
@@ -41,14 +43,13 @@ export class HomePage implements OnInit {
     ngOnInit() {
         this.isApp = !document.URL.startsWith('http');
         this.loadingService.present();
-        this.getGeolocation()
+        this.getGeolocation();
     }
 
     getGeolocation() {
         this.geolocation.getCurrentPosition().then((resp) => {
-            console.log("Coords", resp)
-            let lat = resp.coords.latitude
-            let long = resp.coords.longitude
+            let lat = resp.coords.latitude;
+            let long = resp.coords.longitude;
             if(this.isApp) {
 
                 let options: NativeGeocoderOptions = {
@@ -69,8 +70,8 @@ export class HomePage implements OnInit {
             } else {
                 let url = "http://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + long + "&addressdetails=1";
                 this.httpClient.get(url).subscribe((resp: Address) => {
-                    console.log("API", resp)
-                    let postcode = resp.address.postcode
+                    console.log("API", resp);
+                    let postcode = resp.address.postcode;
                     this.getWeather(postcode);
                 })
             }
@@ -78,14 +79,19 @@ export class HomePage implements OnInit {
     }
 
     getWeather(zipCode: String) {
+        if(!this.loadingService.isLoading) {
+            this.loadingService.present();
+        }
         this.weatherService.getWeather(zipCode).subscribe(
             (resp: any) => {
                 console.log("resp", resp);
                 this.weatherResults = resp;
                 this.currentWeather = resp.current.temp_f;
+                this.currentIcon = resp.current.condition.icon;
                 this.location = resp.location.name;
                 this.precip = resp.current.precip_in;
-                this.wind = resp.current.wind_mph
+                this.wind = resp.current.wind_mph;
+                this.humidity = resp.current.humidity;
 
                 _.each(resp.forecast, (data) => {
                     console.log("DATA", data)
@@ -93,9 +99,15 @@ export class HomePage implements OnInit {
                     this.minTemp = data[0].day.mintemp_f;
                     this.maxTemp = data[0].day.maxtemp_f;
                 })
+            },
+            (err) => {
+
+            },
+            () => {
+                this.loadingService.dismiss();
+                this.zipCode = '';
             }
         );
-        this.loadingService.dismiss()
     }
 
     toggleSearch() {
