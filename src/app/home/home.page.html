@@ -1,14 +1,77 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-toolbar>
+<ion-header no-border>
+    <ion-toolbar class="wa-navbar">
+        <!-- <div *ngIf="!searching"> -->
+            <ion-title class="wa-header__title" text-center>Panahon</ion-title>
+            <!-- <ion-buttons slot="secondary">
+                <ion-button (click)="toggleSearch()">
+                    <ion-icon class="icon" slot="icon-only" name="search"></ion-icon>
+                </ion-button>
+            </ion-buttons> -->
+        <!-- </div> -->
+        <!-- <div *ngIf="searching"> -->
+        <!-- <div>
+            <ion-item lines="none"> -->
+                <!-- <ion-label class="wa-zip">
+                    <ion-buttons>
+                        <ion-button (click)="toggleSearch()">
+                            <ion-icon class="icon" slot="icon-only" name="arrow-back"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                </ion-label> -->
+                <!-- <ion-input class="wa-input"
+                            placeholder="Enter Zip Code"
+                            type="number"
+                            [(ngModel)]="zipCode">
+                </ion-input>
+                <ion-buttons class="wa-nav__button" slot="end">
+                    <ion-button class="wa-nav__button--zip" (click)="getWeather(zipCode)">
+                        <ion-icon class="icon" slot="icon-only" name="search"></ion-icon>
+                    </ion-button>
+                </ion-buttons> -->
+            <!-- </ion-item>
+        </div> -->
+    </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
+<ion-content text-center>
+    <div *ngIf="weatherResults">
+        <div class="wa-temp__location">
+            {{ location }}
+        </div>
+        <div class="wa-temp__container">
+            <div class="wa-temp__high-low">
+                {{ minTemp }}&deg; | {{ maxTemp }}&deg;
+            </div>
+            <div class="wa-temp__current">
+                {{ currentWeather }}&deg;
+            </div>
+        </div>
+        <ion-row class="wa-temp__container-footer">
+            <ion-col col-4>
+                Conditions:
+            </ion-col>
+            <ion-col col-4>
+                Precip: {{ precip }}%
+            </ion-col>
+            <ion-col col-4>
+                Wind: {{ wind }}mph
+            </ion-col>
+        </ion-row>
+        <ion-list>
+            <ion-list-header>
+                <ion-title class="wa-temp__forecast">5 Day</ion-title>
+            </ion-list-header>
+            <ion-item lines="none" *ngFor="let day of weatherResults.forecast.forecastday">
+                <ion-thumbnail slot="start">
+                    <ion-img [src]="day.day.condition.icon"></ion-img>
+                </ion-thumbnail>
+                <ion-row>
+                    <ion-col col-9>
+                        <h4> Low: {{ day.day.mintemp_f }}&deg; | High: {{ day.day.maxtemp_f }}&deg; </h4>
+                        <p>{{ day.date | date:'EEE d' }}</p>
+                    </ion-col>
+                </ion-row>
+            </ion-item>
+        </ion-list>
+    </div>
 </ion-content>
