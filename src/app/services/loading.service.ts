@@ -18,7 +18,7 @@ export class LoadingService {
             spinner: "bubbles",
             showBackdrop: false,
         }).then(a => {
-            a.present().then(() => {
+            return a.present().then(() => {
                 console.log('presented');
                 if (!this.isLoading) {
                     a.dismiss().then(() => console.log('abort presenting'));

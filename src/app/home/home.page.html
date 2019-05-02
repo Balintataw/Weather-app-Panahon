@@ -68,12 +68,10 @@
                 <ion-thumbnail slot="start">
                     <ion-img [src]="day.day.condition.icon"></ion-img>
                 </ion-thumbnail>
-                <!-- <ion-row center> -->
-                            <ion-col size="12" justify-center>
-                                <p>{{ day.date | date:'EEE d' }}</p>
-                                <h4> Low: {{ day.day.mintemp_f }}&deg; | High: {{ day.day.maxtemp_f }}&deg; </h4>
-                            </ion-col>
-                <!-- </ion-row> -->
+                <ion-col size="12" justify-center>
+                    <p>{{ day.date | date:'EEE d' }}</p>
+                    <h4> Low: {{ day.day.mintemp_f }}&deg; | High: {{ day.day.maxtemp_f }}&deg; </h4>
+                </ion-col>
             </ion-item>
         </ion-list>
     </div>

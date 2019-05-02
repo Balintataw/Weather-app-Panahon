@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { NativeGeocoder, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
-import { HttpClient } from '@angular/common/http';
-import * as _ from 'lodash';
 
+import { HttpClient } from '@angular/common/http';
+
+import { LocationService } from '../services/location.service';
+import { LoadingService } from '../services/loading.service';
+import { AlertService } from '../services/alert.service';
 import { WeatherService } from '../weather.service';
-import { LoadingService } from '../loading.service';
+
+import * as _ from 'lodash';
 
 export interface Address {
     address: {
         postcode: String
     }
-}
+};
 
 @Component({
   selector: 'app-home',
@@ -31,52 +33,53 @@ export class HomePage implements OnInit {
     wind: Number;
     weatherResults: any;
     forcast: any[];
-    isApp: Boolean = false;
 
     constructor( 
         private weatherService: WeatherService, 
         private loadingService: LoadingService,
-        private geolocation: Geolocation,
-        private nativeGeocoder: NativeGeocoder,
+        private locationService: LocationService,
+        private alertService: AlertService,
         private httpClient: HttpClient
     ) {}
     ngOnInit() {
-        this.isApp = !document.URL.startsWith('http');
-        this.loadingService.present();
-        this.getGeolocation();
-    }
+        this.loadingService.present()
+            .then(() => {
+                this.getGeolocation();
+            })
+            .catch(err => {
+                console.error("Loading service error", err);
+            })
+    };
 
     getGeolocation() {
-        this.geolocation.getCurrentPosition().then((resp) => {
-            let lat = resp.coords.latitude;
-            let long = resp.coords.longitude;
-            if(this.isApp) {
+        this.locationService.getGeolocation()
+            .then((resp) => {
+                let lat = resp.latitude;
+                let long = resp.longitude;
 
-                let options: NativeGeocoderOptions = {
-                    useLocale: true,
-                    maxResults: 5
-                };
-                this.nativeGeocoder.reverseGeocode(lat, long, options)
-                    .then((result: any[]) => console.log(JSON.stringify('F', result[0])))
-                    .catch((error: any) => console.log(error));
-
-                let watch = this.geolocation.watchPosition();
-                watch.subscribe((data) => {
-                    console.log("Sub", data)
-                    // data can be a set of coordinates, or an error (if an error occurred).
-                    // data.coords.latitude
-                    // data.coords.longitude
-                });
-            } else {
-                let url = "http://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + long + "&addressdetails=1";
-                this.httpClient.get(url).subscribe((resp: Address) => {
-                    console.log("API", resp);
-                    let postcode = resp.address.postcode;
-                    this.getWeather(postcode);
-                })
-            }
-        });
-    }
+                let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyCKsL0hAVI-OqB_XNfRLBcblkV07vylLAI`
+                // let url = "http://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + long + "&addressdetails=1";
+                this.httpClient.get(url).subscribe(
+                    (resp: any) => {
+                        let postCode = resp.results[0].address_components[6].long_name;
+                        this.getWeather(postCode);
+                    },
+                    (error) => {
+                        this.loadingService.dismiss();
+                        console.error(error);
+                    }
+                )
+            })
+            .catch(err => {
+                this.loadingService.dismiss();
+                console.error("Get Location Error:", err);
+                this.alertService.presentAlertConfirm(
+                    'Oops!',  // title
+                    'Please make sure location services are enabled.', // message
+                    'Location Settings' // accept button text
+                )
+            })
+    };
 
     getWeather(zipCode: String) {
         if(!this.loadingService.isLoading) {
@@ -84,7 +87,6 @@ export class HomePage implements OnInit {
         }
         this.weatherService.getWeather(zipCode).subscribe(
             (resp: any) => {
-                console.log("resp", resp);
                 this.weatherResults = resp;
                 this.currentWeather = resp.current.temp_f;
                 this.currentIcon = resp.current.condition.icon;
@@ -94,24 +96,24 @@ export class HomePage implements OnInit {
                 this.humidity = resp.current.humidity;
 
                 _.each(resp.forecast, (data) => {
-                    console.log("DATA", data)
                     this.forcast = data;
                     this.minTemp = data[0].day.mintemp_f;
                     this.maxTemp = data[0].day.maxtemp_f;
                 })
             },
-            (err) => {
-
+            (error) => {
+                this.loadingService.dismiss();
+                console.error(error);
             },
             () => {
                 this.loadingService.dismiss();
                 this.zipCode = '';
             }
         );
-    }
+    };
 
     toggleSearch() {
         this.searching = !this.searching;
         this.zipCode = '';
-    }
-}
+    };
+};
