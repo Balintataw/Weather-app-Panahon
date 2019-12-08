@@ -130,13 +130,11 @@ export class HomePage implements OnInit {
           "Oops!", // title
           "Something went wrong getting the weather.", // message
           "Try Again", // accept button text
-          this.getWeather()
+          () => this.getWeather() // confirm button press callback
         );
       },
       () => {
         this.getForecast();
-        // this.loadingService.dismiss();
-        // this.searchTerm = "";
       }
     );
   }
@@ -147,13 +145,16 @@ export class HomePage implements OnInit {
     }
     this.weatherService.getForecast(this.searchTerm).subscribe(
       (resp: { list: WeatherApiResponse[] }) => {
-        // console.log("FORECAST RESP", resp);
         this.forecast = _.uniqBy(
           _.map(resp.list, day => {
             return {
               ...day,
               dt_txt: day.dt_txt.split(" ")[0],
               temp: Math.round(day.main.temp),
+              wind: {
+                speed: +day.wind.speed.toFixed(0) || 0,
+                direction: this.parseWindDirection(day.wind.deg)
+              },
               icon: `https://openweathermap.org/img/w/${day.weather[0].icon}.png`
             };
           }),

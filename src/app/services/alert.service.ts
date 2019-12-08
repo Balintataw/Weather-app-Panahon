@@ -11,7 +11,7 @@ export class AlertService {
     public alertController: AlertController
   ) {}
 
-  async presentAlertConfirm(title, message, okButtonText, cb) {
+  presentAlertConfirm = async (title, message, okButtonText, cb) => {
     const alert = await this.alertController.create({
       header: title,
       message,
@@ -20,14 +20,13 @@ export class AlertService {
           text: "Cancel",
           role: "cancel",
           cssClass: "secondary",
-          handler: blah => {
-            console.log("Confirm Cancel: blah");
+          handler: event => {
+            console.log("Confirm Cancel:", event);
           }
         },
         {
           text: okButtonText,
           handler: () => {
-            console.log("Confirm Okay");
             if (okButtonText === "Location Settings") {
               this.openNativeSettings.open("location");
             } else {
@@ -39,5 +38,5 @@ export class AlertService {
     });
 
     await alert.present();
-  }
+  };
 }
