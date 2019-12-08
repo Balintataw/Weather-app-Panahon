@@ -63,10 +63,8 @@ export class HomePage implements OnInit {
 
         const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${environment.google_api_key}`;
         this.httpClient.get(url).subscribe(
-          async (resp: any) => {
-            console.log("RESP", resp);
-            // const postCode = resp.results[0].address_components[6].long_name;
-            this.zipCode = resp.results[0].address_components[6].long_name;
+          (response: any) => {
+            this.zipCode = response.results[0].address_components[6].long_name;
             this.getWeather();
           },
           error => {
@@ -91,14 +89,7 @@ export class HomePage implements OnInit {
     if (!this.loadingService.isLoading) {
       this.loadingService.present();
     }
-    // this.loadingService.dismiss();
-    // this.alertService.presentAlertConfirm(
-    //   "Oops!", // title
-    //   "Something went wrong getting the weather.", // message
-    //   "Try Again", // accept button text
-    //   this.getWeather
-    // );
-    console.log("ZIP", this.zipCode);
+
     this.weatherService.getWeather(this.zipCode).subscribe(
       (resp: WeatherApiResponse) => {
         this.weatherResults = resp;

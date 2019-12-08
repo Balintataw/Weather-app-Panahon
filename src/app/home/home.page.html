@@ -43,12 +43,9 @@
     <div class="wa-temp__container">
       <div class="wa-temp__high-low">
         {{ currentDate | date:'EEEE, MMM d' }}
-        <!-- {{ minTemp }}&deg; | {{ maxTemp }}&deg; -->
       </div>
       <div class="wa-temp__current">
         {{ currentTemp }}&deg;
-      </div>
-      <div class="wa-icon__current">
         <ion-img [src]="currentConditionIcon"></ion-img>
       </div>
     </div>
@@ -75,10 +72,29 @@
           <ion-img [src]="day.icon"></ion-img>
         </ion-thumbnail>
         <ion-col size="12" justify-center>
-          <p>{{ day.dt_txt | date:'EEEE, MMM d' }}</p>
-          <h4>
-            {{ day.temp }}&deg;
-          </h4>
+          <p style="margin-bottom: 0; text-align: left;">
+            {{ day.dt_txt | date:'EEEE, MMM d' }}
+          </p>
+          <ion-row>
+            <ion-col>
+              <p style="font-size: 10px; margin-bottom: 0;">Temp</p>
+              <h4 style="margin-top: 0;">
+                {{ day.temp }}&deg;
+              </h4>
+            </ion-col>
+            <ion-col>
+              <p style="font-size: 10px; margin-bottom: 0;">Percip</p>
+              <h4 style="margin-top: 0;">
+                {{ day.rain ? day.rain["3h"] : 0 }}in
+              </h4>
+            </ion-col>
+            <ion-col>
+              <p style="font-size: 10px; margin-bottom: 0;">Wind</p>
+              <h4 style="margin-top: 0;">
+                {{ day.wind ? day.wind.speed : 0 }}in
+              </h4>
+            </ion-col>
+          </ion-row>
         </ion-col>
       </ion-item>
     </ion-list>

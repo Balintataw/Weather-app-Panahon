@@ -73,13 +73,15 @@ ion-content {
   &-temp__high-low {
     text-align: center;
     position: relative;
-    // top: -20px;
     padding-top: 15px;
     color: #57524f;
-    font-size: 18px;
+    font-size: 20px;
   }
 
   &-temp__current {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     font-size: 35px;
     color: #f99110;
     align-self: center;
@@ -91,7 +93,7 @@ ion-content {
   }
 
   &-temp__container-footer {
-    border-bottom: 1px solid #d3d3d3;
+    border-bottom: 1.5px solid #d3d3d3;
     text-align: center;
     color: #57524f;
     font-size: 16px;
