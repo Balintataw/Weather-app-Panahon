@@ -1,14 +1,15 @@
-ion-header, ion-content {
-    --ion-background-color: #f8f8f8;
+ion-header,
+ion-content {
+  --ion-background-color: #f8f8f8;
 }
 
 .icon {
-    color: #004c97; 
+  color: #004c97;
 }
 
 .wa {
   &-navbar {
-    padding: 4px 0;
+    padding: 8px;
     --background: #f8f8f8;
   }
 
@@ -31,7 +32,7 @@ ion-header, ion-content {
     color: #004c97;
   }
 
-  &-nav__button {  
+  &-nav__button {
     button {
       background-color: transparent;
       padding: 0 5px !important;
@@ -39,14 +40,15 @@ ion-header, ion-content {
   }
 
   &-temp__location {
-    color: #57524F;
+    color: #57524f;
     text-align: center;
     padding-top: 15px;
+    padding-bottom: 15px;
     font-size: 30px;
   }
 
   &-temp__forecast {
-    color: #57524F;
+    color: #57524f;
     text-align: center;
     padding-top: 15px;
     font-size: 24px;
@@ -54,7 +56,7 @@ ion-header, ion-content {
 
   &-temp__container {
     background-color: #fff;
-    color: #57524F;
+    color: #57524f;
     border-radius: 50%;
     height: 200px;
     width: 200px;
@@ -73,7 +75,7 @@ ion-header, ion-content {
     position: relative;
     // top: -20px;
     padding-top: 15px;
-    color: #57524F;
+    color: #57524f;
     font-size: 18px;
   }
 
@@ -91,11 +93,10 @@ ion-header, ion-content {
   &-temp__container-footer {
     border-bottom: 1px solid #d3d3d3;
     text-align: center;
-    color: #57524F;
+    color: #57524f;
     font-size: 16px;
     margin: 15px 25px 0;
     padding-top: 10px;
     position: relative;
   }
-
 }
