@@ -11,7 +11,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:android": "ionic cordova build android",
-    "build:android-prod": "ionic cordova build android --prod --release"
+    "build:android-prod": "ionic cordova build android --prod --release",
+    "nuke": "rm -rf node_modules && npm install"
   },
   "private": true,
   "dependencies": {
