@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
-import { Map, latLng, tileLayer, Layer, marker } from "leaflet";
 
 import { LocationService } from "../services/location.service";
 import { LoadingService } from "../services/loading.service";
@@ -38,7 +37,6 @@ export class HomePage implements OnInit {
   zipCode: string | number;
   searching: boolean = false;
   forecast: any[];
-  map: Map;
   coords: { lat: number; long: number };
 
   constructor(
@@ -71,7 +69,6 @@ export class HomePage implements OnInit {
         this.httpClient.get(url).subscribe(
           (response: any) => {
             this.zipCode = response.results[0].address_components[6].long_name;
-            // this.loadmap();
             this.getWeather();
           },
           error => {
@@ -123,13 +120,6 @@ export class HomePage implements OnInit {
           },
           humidity: resp.main.humidity || 0
         };
-        // this.currentDate = new Date();
-        // this.currentTemp = Math.round(resp.main.temp);
-        // this.currentConditionIcon = `https://openweathermap.org/img/w/${resp.weather[0].icon}.png`;
-        // this.location = resp.name;
-        // this.precip = (resp.rain && resp.rain["1h"]) || 0;
-        // this.wind = resp.wind.speed || 0;
-        // this.humidity = resp.main.humidity || 0;
       },
       error => {
         this.loadingService.dismiss();
@@ -155,7 +145,7 @@ export class HomePage implements OnInit {
     }
     this.weatherService.getForecast(this.zipCode).subscribe(
       (resp: { list: WeatherApiResponse[] }) => {
-        console.log("FORECSAT RESP", resp);
+        // console.log("FORECAST RESP", resp);
         this.forecast = _.uniqBy(
           _.map(resp.list, day => {
             return {
@@ -167,24 +157,10 @@ export class HomePage implements OnInit {
           }),
           "dt_txt"
         );
-        console.log("AFTER", this.forecast);
-        // this.weatherResults = resp;
-        // this.currentTemp = resp.main.temp;
-        // this.currentConditionIcon = `http://openweathermap.org/img/w/${resp.weather[0].icon}.png`;
-        // this.location = resp.name;
-        // this.precip = (resp.rain && resp.rain["1h"]) || 0;
-        // this.wind = resp.wind.speed || 0;
-        // this.humidity = resp.main.humidity || 0;
-
-        // _.each(resp.forecast, data => {
-        //   this.forcast = data;
-        //   this.minTemp = data[0].day.mintemp_f;
-        //   this.maxTemp = data[0].day.maxtemp_f;
-        // });
       },
       error => {
         this.loadingService.dismiss();
-        console.error(error);
+        console.error("Error in weatherService:", error);
       },
       () => {
         this.loadingService.dismiss();
@@ -196,22 +172,5 @@ export class HomePage implements OnInit {
   toggleSearch() {
     this.searching = !this.searching;
     this.zipCode = "";
-  }
-
-  loadmap() {
-    setTimeout(() => {
-      this.map = new Map("map").setView([this.coords.lat, this.coords.long], 8);
-
-      tileLayer(
-        `http://tile.openweathermap.org/map/precipitation_new/${1}/${20}/${20}.png?appid=${
-          environment.api_key
-        }`,
-        {
-          // tslint:disable-next-line
-          attribution: "Map data &copy",
-          maxZoom: 18
-        }
-      ).addTo(this.map);
-    }, 50);
   }
 }

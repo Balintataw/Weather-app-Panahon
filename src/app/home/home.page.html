@@ -26,7 +26,7 @@
     >
     </ion-input>
     <ion-buttons class="wa-nav__button" slot="end">
-      <ion-button class="wa-nav__button--zip" (click)="getWeather(zipCode)">
+      <ion-button class="wa-nav__button--zip" (click)="getWeather()">
         <ion-icon class="icon" slot="icon-only" name="search"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -34,8 +34,6 @@
         </div> -->
   </ion-toolbar>
 </ion-header>
-
-<!-- <div id="map" style="height:400px; width: 100%;"></div> -->
 
 <ion-content text-center>
   <div *ngIf="currentWeather">
