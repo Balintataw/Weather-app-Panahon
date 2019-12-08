@@ -1,23 +1,5 @@
 <ion-header no-border>
   <ion-toolbar class="wa-navbar">
-    <!-- <div *ngIf="!searching"> -->
-    <!-- <ion-title class="wa-header__title" text-center>Panahon</ion-title> -->
-    <!-- <ion-buttons slot="secondary">
-                <ion-button (click)="toggleSearch()">
-                    <ion-icon class="icon" slot="icon-only" name="search"></ion-icon>
-                </ion-button>
-            </ion-buttons> -->
-    <!-- </div> -->
-    <!-- <div *ngIf="searching"> -->
-    <!-- <div>
-            <ion-item lines="none"> -->
-    <!-- <ion-label class="wa-zip">
-                    <ion-buttons>
-                        <ion-button (click)="toggleSearch()">
-                            <ion-icon class="icon" slot="icon-only" name="arrow-back"></ion-icon>
-                        </ion-button>
-                    </ion-buttons>
-                </ion-label> -->
     <ion-input
       class="wa-input"
       placeholder="Enter Zip Code"
@@ -37,7 +19,7 @@
 
 <ion-content text-center>
   <div *ngIf="currentWeather">
-    <div class="wa-temp__location">
+    <div class="wa-temp__location-name">
       {{ currentWeather.localeName }}
     </div>
     <div class="wa-temp__container">
@@ -66,37 +48,56 @@
 
     <ion-list>
       <ion-list-header>
-        <ion-title class="wa-temp__forecast">6 Day</ion-title>
+        <ion-title class="wa-temp__forecast">5 Day</ion-title>
       </ion-list-header>
       <ion-item lines="none" *ngFor="let day of forecast">
-        <ion-thumbnail slot="start">
-          <ion-img [src]="day.icon"></ion-img>
-        </ion-thumbnail>
-        <ion-col size="12" justify-center>
-          <p style="margin-bottom: 0; text-align: left;">
-            {{ day.dt_txt | date:'EEEE, MMM d' }}
-          </p>
-          <ion-row>
-            <ion-col>
-              <p style="font-size: 10px; margin-bottom: 0;">Temp</p>
-              <h4 style="margin-top: 0;">
-                {{ day.temp }}&deg;
-              </h4>
-            </ion-col>
-            <ion-col>
-              <p style="font-size: 10px; margin-bottom: 0;">Percip</p>
-              <h4 style="margin-top: 0;">
-                {{ day.rain ? day.rain["3h"] : 0 }}in
-              </h4>
-            </ion-col>
-            <ion-col>
-              <p style="font-size: 10px; margin-bottom: 0;">Wind</p>
-              <h4 style="margin-top: 0;">
-                {{ day.wind ? day.wind.speed : 0 }}in
-              </h4>
-            </ion-col>
-          </ion-row>
-        </ion-col>
+        <ion-row class="wa-temp__container-list-item">
+          <ion-col size="12" justify-center>
+            <ion-row align-items-center justify-content-center>
+              <p style="text-align: left; margin-top: 0; margin-bottom: 0;">
+                {{ day.dt_txt | date:'EEEE, MMM d' }}
+              </p>
+              <ion-img
+                style="height: 40px; width: 40px; margin-left: 12px;"
+                [src]="day.icon"
+              ></ion-img>
+            </ion-row>
+            <ion-row justify-content-start>
+              <ion-col col-4>
+                <p class="wa-temp__list-item-col-header">
+                  Temp
+                </p>
+                <ion-row justify-content-center>
+                  <h4 style="margin-top: 0;">
+                    {{ day.temp }}&deg;
+                  </h4>
+                </ion-row>
+              </ion-col>
+              <ion-col col-4>
+                <p class="wa-temp__list-item-col-header">
+                  Percip
+                </p>
+                <ion-row justify-content-center>
+                  <h4 style="margin-top: 0;">
+                    {{ day.rain ? day.rain["3h"] : 0 }}
+                  </h4>
+                  <span class="wa-temp__units">in</span>
+                </ion-row>
+              </ion-col>
+              <ion-col col-4>
+                <p class="wa-temp__list-item-col-header">
+                  Wind ({{ day.wind && day.wind.direction}})
+                </p>
+                <ion-row justify-content-center>
+                  <h4 style="margin-top: 0;">
+                    {{ day.wind && day.wind.speed }}
+                  </h4>
+                  <span class="wa-temp__units">mph</span>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
       </ion-item>
     </ion-list>
   </div>

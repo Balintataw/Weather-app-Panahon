@@ -39,7 +39,7 @@ ion-content {
     }
   }
 
-  &-temp__location {
+  &-temp__location-name {
     color: #57524f;
     text-align: center;
     padding-top: 15px;
@@ -51,7 +51,9 @@ ion-content {
     color: #57524f;
     text-align: center;
     padding-top: 15px;
+    padding-bottom: 15px;
     font-size: 24px;
+    font-weight: 400;
   }
 
   &-temp__container {
@@ -88,6 +90,11 @@ ion-content {
     padding-top: 15px;
   }
 
+  &-temp__units {
+    font-size: 8;
+    margin-top: 4px;
+  }
+
   &-icon__current {
     align-self: center;
   }
@@ -97,9 +104,27 @@ ion-content {
     text-align: center;
     color: #57524f;
     font-size: 16px;
-    margin: 15px 25px 0;
+    // margin: 15px 25px 0;
     padding-top: 10px;
     padding-bottom: 10px;
     position: relative;
+  }
+
+  &-temp__list-item-col-header {
+    font-size: 10px;
+    margin-bottom: 0;
+    margin-top: 0;
+    text-align: center;
+  }
+
+  &-temp__container-list-item {
+    border-bottom: 1px solid #d3d3d3;
+    color: #57524f;
+    font-size: 16px;
+    // margin: 15px 25px 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+    width: 100%;
   }
 }
