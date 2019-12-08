@@ -68,7 +68,6 @@ export class HomePage implements OnInit {
         const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${this.coords.lat},${this.coords.long}&key=${environment.google_api_key}`;
         this.httpClient.get(url).subscribe(
           (response: any) => {
-            console.log("SEARCH TERM", response.results[0].address_components);
             this.searchTerm =
               response.results[0].address_components[6].long_name;
             this.getWeather();
@@ -126,12 +125,22 @@ export class HomePage implements OnInit {
       error => {
         this.loadingService.dismiss();
         console.error("Get Current weather error:", error);
-        this.alertService.presentAlertConfirm(
-          "Oops!", // title
-          "Something went wrong getting the weather.", // message
-          "Try Again", // accept button text
-          () => this.getWeather() // confirm button press callback
-        );
+
+        if (error.error.message === "city not found") {
+          this.alertService.presentAlertConfirm(
+            "Sorry!", // title
+            `We could not find weather for the city '${this.searchTerm}'.`, // message
+            "Try Again", // accept button text
+            () => (this.searchTerm = "")
+          );
+        } else {
+          this.alertService.presentAlertConfirm(
+            "Oops!", // title
+            "Something went wrong getting the weather.", // message
+            "Try Again", // accept button text
+            () => this.getWeather() // confirm button press callback
+          );
+        }
       },
       () => {
         this.getForecast();

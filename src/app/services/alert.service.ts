@@ -27,10 +27,11 @@ export class AlertService {
         {
           text: okButtonText,
           handler: () => {
-            if (okButtonText === "Location Settings") {
-              this.openNativeSettings.open("location");
-            } else {
+            // TODO fix this to only accept a callback
+            if (cb) {
               cb();
+            } else if (okButtonText === "Location Settings") {
+              this.openNativeSettings.open("location");
             }
           }
         }

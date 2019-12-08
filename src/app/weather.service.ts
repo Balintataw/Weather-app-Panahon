@@ -3,40 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "../environments/environment";
 
 export interface WeatherApiResponse {
-  // request: {
-  //   type: string;
-  //   query: string;
-  //   language: string;
-  //   unit: string;
-  // };
-  // location: {
-  //   name: string;
-  //   country: string;
-  //   region: string;
-  //   lat: string;
-  //   lon: string;
-  //   timezone_id: string;
-  //   localtime: string;
-  //   localtime_epoch: number;
-  //   utc_offset: string;
-  // };
-  // current: {
-  //   observation_time: string;
-  //   temperature: number;
-  //   weather_code: number;
-  //   weather_icons: string[];
-  //   weather_descriptions: string[];
-  //   wind_speed: number;
-  //   wind_degree: number;
-  //   wind_dir: string;
-  //   pressure: number;
-  //   precip: number;
-  //   humidity: number;
-  //   cloudcover: number;
-  //   feelslike: number;
-  //   uv_index: number;
-  //   visibility: number;
-  // };
+  error: { cod: string; message: string };
   coord: {
     lon: number;
     lat: number;
@@ -94,14 +61,19 @@ export interface WeatherApiResponse {
 export class WeatherService {
   constructor(private httpClient: HttpClient) {}
 
+  qeuryType = searchTerm => (isNaN(searchTerm) ? "q" : "zip");
+
   getWeather(searchParam: string | number) {
-    // const zipLocation = `${environment.api_baseurl}?access_key=007c271ac5bacdf3fb5b3670ab5b30f7&query=${zipCode}&forecast_days=5&units=f`;
-    const url = `${environment.api_baseurl}/weather?q=${searchParam},us&APPID=${environment.api_key}&units=imperial`;
+    const url = `${environment.api_baseurl}/weather?${this.qeuryType(
+      searchParam
+    )}=${searchParam},us&APPID=${environment.api_key}&units=imperial`;
     return this.httpClient.get(url);
   }
 
   getForecast(searchParam: string | number) {
-    const url = `${environment.api_baseurl}/forecast?q=${searchParam},us&APPID=${environment.api_key}&units=imperial`;
+    const url = `${environment.api_baseurl}/forecast?${this.qeuryType(
+      searchParam
+    )}=${searchParam},us&APPID=${environment.api_key}&units=imperial`;
     return this.httpClient.get(url);
   }
 }

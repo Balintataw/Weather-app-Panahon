@@ -2,8 +2,8 @@
   <ion-toolbar class="wa-navbar">
     <ion-input
       class="wa-input"
-      placeholder="Enter city name"
-      type="number"
+      placeholder="City name or zip code"
+      type="text"
       [(ngModel)]="searchTerm"
     >
     </ion-input>
@@ -53,7 +53,7 @@
       <ion-item lines="none" *ngFor="let day of forecast">
         <ion-row class="wa-temp__container-list-item">
           <ion-col size="12" justify-center>
-            <ion-row align-items-center justify-content-center>
+            <ion-row class="ion-align-items-center ion-justify-content-center">
               <p style="text-align: left; margin-top: 0; margin-bottom: 0;">
                 {{ day.dt_txt | date:'EEEE, MMM d' }}
               </p>
@@ -62,12 +62,12 @@
                 [src]="day.icon"
               ></ion-img>
             </ion-row>
-            <ion-row justify-content-start>
+            <ion-row class="ion-justify-content-center">
               <ion-col col-4>
                 <p class="wa-temp__list-item-col-header">
                   Temp
                 </p>
-                <ion-row justify-content-center>
+                <ion-row class="ion-justify-content-center">
                   <h4 style="margin-top: 0;">
                     {{ day.temp }}&deg;
                   </h4>
@@ -77,7 +77,7 @@
                 <p class="wa-temp__list-item-col-header">
                   Percip
                 </p>
-                <ion-row justify-content-center>
+                <ion-row class="ion-justify-content-center">
                   <h4 style="margin-top: 0;">
                     {{ day.rain ? day.rain["3h"] : 0 }}
                   </h4>
@@ -88,7 +88,7 @@
                 <p class="wa-temp__list-item-col-header">
                   Wind ({{ day.wind && day.wind.direction}})
                 </p>
-                <ion-row justify-content-center>
+                <ion-row class="ion-justify-content-center">
                   <h4 style="margin-top: 0;">
                     {{ day.wind && day.wind.speed }}
                   </h4>
