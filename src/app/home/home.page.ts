@@ -128,7 +128,7 @@ export class HomePage implements OnInit {
           "Oops!", // title
           "Something went wrong getting the weather.", // message
           "Try Again", // accept button text
-          this.getWeather()
+          () => this.getWeather() // confirm button press callback
         );
       },
       () => {
