@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
+import { Map, latLng, tileLayer, Layer, marker } from "leaflet";
 
 import { LocationService } from "../services/location.service";
 import { LoadingService } from "../services/loading.service";
@@ -22,19 +23,23 @@ export interface Address {
   styleUrls: ["home.page.scss"]
 })
 export class HomePage implements OnInit {
-  currentTemp: number;
-  currentDate: Date;
-  currentConditionIcon: string;
+  currentWeather: {
+    temp: number;
+    date: Date;
+    icon: string;
+    localeName: string;
+    precip: number;
+    humidity: number;
+    wind: {
+      speed: number;
+      direction: string;
+    };
+  };
   zipCode: string | number;
   searching: boolean = false;
-  location: string;
-  minTemp: number;
-  maxTemp: number;
-  precip: number;
-  humidity: number;
-  wind: number;
-  weatherResults: any;
   forecast: any[];
+  map: Map;
+  coords: { lat: number; long: number };
 
   constructor(
     private weatherService: WeatherService,
@@ -60,16 +65,18 @@ export class HomePage implements OnInit {
       .then(resp => {
         const lat = resp.latitude;
         const long = resp.longitude;
+        this.coords = { lat, long };
 
-        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${environment.google_api_key}`;
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${this.coords.lat},${this.coords.long}&key=${environment.google_api_key}`;
         this.httpClient.get(url).subscribe(
           (response: any) => {
             this.zipCode = response.results[0].address_components[6].long_name;
+            // this.loadmap();
             this.getWeather();
           },
           error => {
             this.loadingService.dismiss();
-            console.error(error);
+            console.error("GeoLocation error:", error);
           }
         );
       })
@@ -85,6 +92,18 @@ export class HomePage implements OnInit {
       });
   }
 
+  parseWindDirection(degrees) {
+    if (degrees < 90) {
+      return "NE";
+    } else if (degrees < 180) {
+      return "SE";
+    } else if (degrees < 270) {
+      return "SW";
+    } else {
+      return "NW";
+    }
+  }
+
   getWeather() {
     if (!this.loadingService.isLoading) {
       this.loadingService.present();
@@ -92,14 +111,25 @@ export class HomePage implements OnInit {
 
     this.weatherService.getWeather(this.zipCode).subscribe(
       (resp: WeatherApiResponse) => {
-        this.weatherResults = resp;
-        this.currentDate = new Date();
-        this.currentTemp = Math.round(resp.main.temp);
-        this.currentConditionIcon = `http://openweathermap.org/img/w/${resp.weather[0].icon}.png`;
-        this.location = resp.name;
-        this.precip = (resp.rain && resp.rain["1h"]) || 0;
-        this.wind = resp.wind.speed || 0;
-        this.humidity = resp.main.humidity || 0;
+        this.currentWeather = {
+          date: new Date(),
+          temp: Math.round(resp.main.temp),
+          icon: `https://openweathermap.org/img/w/${resp.weather[0].icon}.png`,
+          localeName: resp.name,
+          precip: (resp.rain && resp.rain["1h"]) || 0,
+          wind: {
+            speed: resp.wind.speed || 0,
+            direction: this.parseWindDirection(resp.wind.deg)
+          },
+          humidity: resp.main.humidity || 0
+        };
+        // this.currentDate = new Date();
+        // this.currentTemp = Math.round(resp.main.temp);
+        // this.currentConditionIcon = `https://openweathermap.org/img/w/${resp.weather[0].icon}.png`;
+        // this.location = resp.name;
+        // this.precip = (resp.rain && resp.rain["1h"]) || 0;
+        // this.wind = resp.wind.speed || 0;
+        // this.humidity = resp.main.humidity || 0;
       },
       error => {
         this.loadingService.dismiss();
@@ -132,7 +162,7 @@ export class HomePage implements OnInit {
               ...day,
               dt_txt: day.dt_txt.split(" ")[0],
               temp: Math.round(day.main.temp),
-              icon: `http://openweathermap.org/img/w/${day.weather[0].icon}.png`
+              icon: `https://openweathermap.org/img/w/${day.weather[0].icon}.png`
             };
           }),
           "dt_txt"
@@ -166,5 +196,22 @@ export class HomePage implements OnInit {
   toggleSearch() {
     this.searching = !this.searching;
     this.zipCode = "";
+  }
+
+  loadmap() {
+    setTimeout(() => {
+      this.map = new Map("map").setView([this.coords.lat, this.coords.long], 8);
+
+      tileLayer(
+        `http://tile.openweathermap.org/map/precipitation_new/${1}/${20}/${20}.png?appid=${
+          environment.api_key
+        }`,
+        {
+          // tslint:disable-next-line
+          attribution: "Map data &copy",
+          maxZoom: 18
+        }
+      ).addTo(this.map);
+    }, 50);
   }
 }

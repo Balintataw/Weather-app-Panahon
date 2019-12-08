@@ -35,34 +35,37 @@
   </ion-toolbar>
 </ion-header>
 
+<!-- <div id="map" style="height:400px; width: 100%;"></div> -->
+
 <ion-content text-center>
-  <div *ngIf="weatherResults">
+  <div *ngIf="currentWeather">
     <div class="wa-temp__location">
-      {{ location }}
+      {{ currentWeather.localeName }}
     </div>
     <div class="wa-temp__container">
       <div class="wa-temp__high-low">
-        {{ currentDate | date:'EEEE, MMM d' }}
+        {{ currentWeather.date | date:'EEEE, MMM d' }}
       </div>
       <div class="wa-temp__current">
-        {{ currentTemp }}&deg;
-        <ion-img [src]="currentConditionIcon"></ion-img>
+        {{ currentWeather.temp }}&deg;
+        <ion-img [src]="currentWeather.icon"></ion-img>
       </div>
     </div>
     <ion-row class="wa-temp__container-footer">
       <ion-col col-4>
         <div>Humidity:</div>
-        {{ humidity }}%
+        {{ currentWeather.humidity }}%
       </ion-col>
       <ion-col col-4>
         <div>Precip:</div>
-        {{ precip }}in
+        {{ currentWeather.precip }}in
       </ion-col>
       <ion-col col-4>
         <div>Wind:</div>
-        {{ wind }}mph
+        {{ currentWeather.wind.speed }}mph ({{ currentWeather.wind.direction}})
       </ion-col>
     </ion-row>
+
     <ion-list>
       <ion-list-header>
         <ion-title class="wa-temp__forecast">6 Day</ion-title>
