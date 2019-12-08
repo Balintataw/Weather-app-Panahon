@@ -6,6 +6,7 @@ import { LocationService } from "../services/location.service";
 import { LoadingService } from "../services/loading.service";
 import { AlertService } from "../services/alert.service";
 import { WeatherService, WeatherApiResponse } from "../weather.service";
+import { environment } from "../../environments/environment";
 
 import * as _ from "lodash";
 
@@ -60,7 +61,7 @@ export class HomePage implements OnInit {
         const lat = resp.latitude;
         const long = resp.longitude;
 
-        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyCKsL0hAVI-OqB_XNfRLBcblkV07vylLAI`;
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${environment.google_api_key}`;
         this.httpClient.get(url).subscribe(
           async (resp: any) => {
             console.log("RESP", resp);
