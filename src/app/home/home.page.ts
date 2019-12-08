@@ -34,7 +34,7 @@ export class HomePage implements OnInit {
       direction: string;
     };
   };
-  zipCode: string | number;
+  searchTerm: string | number;
   searching: boolean = false;
   forecast: any[];
   coords: { lat: number; long: number };
@@ -68,7 +68,9 @@ export class HomePage implements OnInit {
         const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${this.coords.lat},${this.coords.long}&key=${environment.google_api_key}`;
         this.httpClient.get(url).subscribe(
           (response: any) => {
-            this.zipCode = response.results[0].address_components[6].long_name;
+            console.log("SEARCH TERM", response.results[0].address_components);
+            this.searchTerm =
+              response.results[0].address_components[6].long_name;
             this.getWeather();
           },
           error => {
@@ -106,7 +108,7 @@ export class HomePage implements OnInit {
       this.loadingService.present();
     }
 
-    this.weatherService.getWeather(this.zipCode).subscribe(
+    this.weatherService.getWeather(this.searchTerm).subscribe(
       (resp: WeatherApiResponse) => {
         this.currentWeather = {
           date: new Date(),
@@ -134,7 +136,7 @@ export class HomePage implements OnInit {
       () => {
         this.getForecast();
         // this.loadingService.dismiss();
-        // this.zipCode = "";
+        // this.searchTerm = "";
       }
     );
   }
@@ -143,7 +145,7 @@ export class HomePage implements OnInit {
     if (!this.loadingService.isLoading) {
       this.loadingService.present();
     }
-    this.weatherService.getForecast(this.zipCode).subscribe(
+    this.weatherService.getForecast(this.searchTerm).subscribe(
       (resp: { list: WeatherApiResponse[] }) => {
         // console.log("FORECAST RESP", resp);
         this.forecast = _.uniqBy(
@@ -164,13 +166,13 @@ export class HomePage implements OnInit {
       },
       () => {
         this.loadingService.dismiss();
-        this.zipCode = "";
+        this.searchTerm = "";
       }
     );
   }
 
   toggleSearch() {
     this.searching = !this.searching;
-    this.zipCode = "";
+    this.searchTerm = "";
   }
 }

@@ -96,12 +96,12 @@ export class WeatherService {
 
   getWeather(searchParam: string | number) {
     // const zipLocation = `${environment.api_baseurl}?access_key=007c271ac5bacdf3fb5b3670ab5b30f7&query=${zipCode}&forecast_days=5&units=f`;
-    const url = `${environment.api_baseurl}/weather?zip=${searchParam},us&APPID=${environment.api_key}&units=imperial`;
+    const url = `${environment.api_baseurl}/weather?q=${searchParam},us&APPID=${environment.api_key}&units=imperial`;
     return this.httpClient.get(url);
   }
 
   getForecast(searchParam: string | number) {
-    const url = `${environment.api_baseurl}/forecast?zip=${searchParam},us&APPID=${environment.api_key}&units=imperial`;
+    const url = `${environment.api_baseurl}/forecast?q=${searchParam},us&APPID=${environment.api_key}&units=imperial`;
     return this.httpClient.get(url);
   }
 }
