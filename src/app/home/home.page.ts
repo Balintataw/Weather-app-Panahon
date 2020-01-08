@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
 
+import { CacheService } from "ionic-cache";
 import { LocationService } from "../services/location.service";
 import { LoadingService } from "../services/loading.service";
 import { AlertService } from "../services/alert.service";
@@ -44,7 +45,8 @@ export class HomePage implements OnInit {
     private loadingService: LoadingService,
     private locationService: LocationService,
     private alertService: AlertService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private cache: CacheService
   ) {}
   ngOnInit() {
     this.loadingService
@@ -102,13 +104,41 @@ export class HomePage implements OnInit {
     }
   }
 
-  getWeather() {
+  async getWeather() {
     if (!this.loadingService.isLoading) {
       this.loadingService.present();
     }
 
+    // check cache for current weather data. resets hourly
+    const exists = await this.cache.itemExists("local-weather");
+    const cachedData = await this.cache.getItem("local-weather").catch(() => {
+      this.cache.clearExpired();
+      return null;
+    });
+
+    if (exists && cachedData) {
+      this.currentWeather = {
+        date: new Date(),
+        temp: Math.round(cachedData.main.temp),
+        icon: `https://openweathermap.org/img/w/${cachedData.weather[0].icon}.png`,
+        localeName: cachedData.name,
+        precip: (cachedData.rain && cachedData.rain["1h"]) || 0,
+        wind: {
+          speed: cachedData.wind.speed || 0,
+          direction: this.parseWindDirection(cachedData.wind.deg)
+        },
+        humidity: cachedData.main.humidity || 0
+      };
+      this.getForecast();
+      return;
+    }
+
     this.weatherService.getWeather(this.searchTerm).subscribe(
-      (resp: WeatherApiResponse) => {
+      async (resp: WeatherApiResponse) => {
+        await this.cache.getOrSetItem("local-weather", () =>
+          Promise.resolve(resp)
+        );
+
         this.currentWeather = {
           date: new Date(),
           temp: Math.round(resp.main.temp),
@@ -148,18 +178,56 @@ export class HomePage implements OnInit {
     );
   }
 
-  getForecast() {
+  async getForecast() {
     if (!this.loadingService.isLoading) {
       this.loadingService.present();
     }
+
+    // check cache for forecast data. resets hourly
+    const exists = await this.cache.itemExists("forecast-weather");
+    const cachedData = await this.cache
+      .getItem("forecast-weather")
+      .catch(() => {
+        return null;
+      });
+
+    if (exists && cachedData) {
+      this.forecast = _.uniqBy(
+        _.map(cachedData.list, day => {
+          return {
+            ...day,
+            dt_txt: day.dt_txt.split(" ")[0],
+            temp: Math.round(day.main.temp),
+            precip: (day.rain && day.rain["3hr"]) || 0,
+            wind: {
+              speed: +day.wind.speed.toFixed(0) || 0,
+              direction: this.parseWindDirection(day.wind.deg)
+            },
+            icon: `https://openweathermap.org/img/w/${day.weather[0].icon}.png`
+          };
+        }),
+        "dt_txt"
+      );
+
+      this.loadingService.dismiss();
+      this.searchTerm = "";
+      return;
+    }
+
     this.weatherService.getForecast(this.searchTerm).subscribe(
-      (resp: { list: WeatherApiResponse[] }) => {
+      async (resp: { list: WeatherApiResponse[] }) => {
+        await this.cache.getOrSetItem("forecast-weather", () =>
+          // set response in cache
+          Promise.resolve(resp)
+        );
+
         this.forecast = _.uniqBy(
           _.map(resp.list, day => {
             return {
               ...day,
               dt_txt: day.dt_txt.split(" ")[0],
               temp: Math.round(day.main.temp),
+              precip: (day.rain && day.rain["3hr"]) || 0,
               wind: {
                 speed: +day.wind.speed.toFixed(0) || 0,
                 direction: this.parseWindDirection(day.wind.deg)

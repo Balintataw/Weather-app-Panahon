@@ -17,7 +17,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content text-center>
+<ion-content class="ion-text-center">
   <div *ngIf="currentWeather">
     <div class="wa-temp__location-name">
       {{ currentWeather.localeName }}
@@ -33,15 +33,15 @@
     </div>
     <ion-row class="wa-temp__container-footer">
       <ion-col col-4>
-        <div>Humidity:</div>
+        <div style="font-weight: 600;">Humidity:</div>
         {{ currentWeather.humidity }}%
       </ion-col>
       <ion-col col-4>
-        <div>Precip:</div>
+        <div style="font-weight: 600;">Precip:</div>
         {{ currentWeather.precip }}in
       </ion-col>
       <ion-col col-4>
-        <div>Wind:</div>
+        <div style="font-weight: 600;">Wind:</div>
         {{ currentWeather.wind.speed }}mph ({{ currentWeather.wind.direction}})
       </ion-col>
     </ion-row>
@@ -54,7 +54,9 @@
         <ion-row class="wa-temp__container-list-item">
           <ion-col size="12" justify-center>
             <ion-row class="ion-align-items-center ion-justify-content-center">
-              <p style="text-align: left; margin-top: 0; margin-bottom: 0;">
+              <p
+                style="text-align: left; margin-top: 0; margin-bottom: 0; font-weight: 600;"
+              >
                 {{ day.dt_txt | date:'EEEE, MMM d' }}
               </p>
               <ion-img
@@ -75,11 +77,11 @@
               </ion-col>
               <ion-col col-4>
                 <p class="wa-temp__list-item-col-header">
-                  Percip
+                  Precip
                 </p>
                 <ion-row class="ion-justify-content-center">
                   <h4 style="margin-top: 0;">
-                    {{ day.rain ? day.rain["3h"] : 0 }}
+                    {{ day.precip }}
                   </h4>
                   <span class="wa-temp__units">in</span>
                 </ion-row>

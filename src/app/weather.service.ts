@@ -76,4 +76,13 @@ export class WeatherService {
     )}=${searchParam},us&APPID=${environment.api_key}&units=imperial`;
     return this.httpClient.get(url);
   }
+
+  getWeekForecast(searchParam: string | number) {
+    // a paid account feature only of api
+    const url = `${environment.api_baseurl}/forecast/daily?${this.qeuryType(
+      searchParam
+    )}=${searchParam},us&cnt=7&APPID=${environment.api_key}&units=imperial`;
+
+    return this.httpClient.get(url);
+  }
 }

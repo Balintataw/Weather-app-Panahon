@@ -45,6 +45,7 @@ ion-content {
     padding-top: 15px;
     padding-bottom: 15px;
     font-size: 30px;
+    font-weight: 600;
   }
 
   &-temp__forecast {
@@ -53,17 +54,17 @@ ion-content {
     padding-top: 15px;
     padding-bottom: 15px;
     font-size: 24px;
-    font-weight: 400;
+    font-weight: 600;
   }
 
   &-temp__container {
     background-color: #fff;
     color: #57524f;
     border-radius: 50%;
+    box-shadow: 0 0 8px 3px #f99110;
     height: 200px;
     width: 200px;
     margin: 0 auto;
-    // margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -104,7 +105,6 @@ ion-content {
     text-align: center;
     color: #57524f;
     font-size: 16px;
-    // margin: 15px 25px 0;
     padding-top: 10px;
     padding-bottom: 10px;
     position: relative;
@@ -121,9 +121,6 @@ ion-content {
     border-bottom: 1px solid #d3d3d3;
     color: #57524f;
     font-size: 16px;
-    // margin: 15px 25px 0;
-    padding-top: 10px;
-    padding-bottom: 10px;
     position: relative;
     width: 100%;
   }
