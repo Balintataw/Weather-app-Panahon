@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class LoadingService {
 

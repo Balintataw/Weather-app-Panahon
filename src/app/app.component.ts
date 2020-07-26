@@ -2,8 +2,9 @@ import { Component } from "@angular/core";
 import { CacheService } from "ionic-cache";
 
 import { Platform } from "@ionic/angular";
-import { SplashScreen } from "@ionic-native/splash-screen/ngx";
-import { StatusBar } from "@ionic-native/status-bar/ngx";
+import { Plugins, SplashScreenPlugin, StatusBarBackgroundColorOptions, StatusBarStyle } from "@capacitor/core";
+
+const { SplashScreen, StatusBar } = Plugins;
 
 @Component({
   selector: "app-root",
@@ -12,8 +13,8 @@ import { StatusBar } from "@ionic-native/status-bar/ngx";
 export class AppComponent {
   constructor(
     private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
+    // private splashScreen: SplashScreenPlugin,
+    // private statusBar: StatusBarPlugin,
     cache: CacheService
   ) {
     cache.setDefaultTTL(60 * 60);
@@ -22,8 +23,13 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      StatusBar.setStyle({
+        style: StatusBarStyle.Light,
+      });
+      StatusBar.setBackgroundColor({
+        color: "rgb(248, 248, 248)"
+      });
+      SplashScreen.hide();
     });
   }
 }

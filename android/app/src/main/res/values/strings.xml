@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Panahon</string>
+    <string name="title_activity_main">Panahon</string>
+    <string name="package_name">com.jossendal_dev.panahon</string>
+    <string name="custom_url_scheme">com.jossendal_dev.panahon</string>
+</resources>
